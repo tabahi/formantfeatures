@@ -72,7 +72,7 @@ Indices | Description
 
 ## Bulk processing
 
-Pass a list of DB files objects (see library: tabahi/SER_Datasets_Import) and path of HDF file to save extracted features:
+Pass a list of DB files objects (see <https://github.com/tabahi/SER_Datasets_Import>) and path of HDF file to save extracted features:
 
 
 `Extract_files_formant_features`
@@ -87,9 +87,9 @@ FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_fil
 ### Parameters
 
 
-`array_of_clips`: list of `Clip_file_Class` objects from 'SER_DB.py';
+`array_of_clips`: list of `Clip_file_Class` objects from 'SER_DB.py' <https://github.com/tabahi/SER_Datasets_Import/blob/master/SER_Datasets_Libs/SER_DB.py>
 
-`features_save_file`: string, Path for HDF file where extracted features will be stored;
+`features_save_file`: string, Path for HDF file where extracted features will be stored
 
 
 ### Returns
@@ -98,23 +98,23 @@ FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_fil
 `processed_clips`: int, number of successfully processing clips;
 
 
-## Other functions
+## Read HDF data files
 
-HDF read functions: `import_features_from_HDF` import from `FormantsHDPread`
+HDF read functions: `import_features_from_HDF` import from `FormatsHDFread`
 
 ```python
-import FormantsLib.FormantsHDPread as FormantsHDPread
+import FormantsLib.FormatsHDFread as FormatsHDFread
 
-formant_features, labels, unique_speaker_ids, unique_classes = FormantsHDPread.import_features_from_HDF(storage_file, deselect_labels=['B', 'X'])
+formant_features, labels, unique_speaker_ids, unique_classes = FormatsHDFread.import_features_from_HDF(storage_file, deselect_labels=['B', 'X'])
 # Import without deslected labels B (Boring) and X (unknown)
 ```
 
-Print features stats and save to file:
+Print label stats and save features stats to file:
 
 ```python
-FormantsHDPread.print_database_stats(labels)
+FormatsHDFread.print_database_stats(labels)
 
-FormantsHDPread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
+FormatsHDFread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
 ```
 
 ## Dependencies

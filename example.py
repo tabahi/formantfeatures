@@ -37,15 +37,15 @@ def main():
 
     FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
 
-    import FormantsLib.FormantsHDPread as FormantsHDPread
+    import FormantsLib.FormatsHDFread as FormatsHDFread
 
     #Read extracted formants from HDF files:
-    formant_features, labels, unique_speaker_ids, unique_classes = FormantsHDPread.import_features_from_HDF(storage_file, deselect_labels=['B'])
+    formant_features, labels, unique_speaker_ids, unique_classes = FormatsHDFread.import_features_from_HDF(storage_file, deselect_labels=['B'])
 
 
-    FormantsHDPread.print_database_stats(labels)
+    FormatsHDFread.print_database_stats(labels)
 
-    FormantsHDPread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
+    FormatsHDFread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
     '''
     
 
