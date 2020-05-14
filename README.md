@@ -1,14 +1,21 @@
 # Formant characteristic features extraction
 
-Extract frequency, power, width and dissonance of formants from a WAV file. These formant featues can be used for speech recognition or music analysis.
+Extract frequency, power, width and dissonance of formants from a WAV file. These formant features can be used for speech recognition or music analysis.
 
-`Extract_formant_features` in `FormantsLib.FormantsExtract` returns `formants_features, frame_count, signal_length, trimmed_length`
+
+## Get formant characteristics from a single file
+
+`Extract_wav_file_formants`
+--------------------------------
 
 ```python
-FormantsLib.Extract_wav_file_formants((string)test_wav, (float)window_length=0.025, (float)window_step=0.010, (float)emphasize_ratio=0.7, (int)f0_min=30, (int)f0_max=4000, (int)max_frames=400, (int)max_formants=0.5)
+import FormantsLib.FormantsExtract as FormantsExtract
+
+FormantsExtract.Extract_wav_file_formants((string)test_wav, (float)window_length=0.025, (float)window_step=0.010, (float)emphasize_ratio=0.7, (int)f0_min=30, (int)f0_max=4000, (int)max_frames=400, (int)max_formants=0.5)
 ```
-Parameters
-----------
+
+### Parameters
+
 
 >`wav_file_path`: string, Path of the input wav audio file.
 
@@ -28,8 +35,8 @@ Parameters
 
 >`formant_decay`: float, optional (default=0.5). Decay constant to exponentially decrease feature values by their formant amplitude ranks.
 
-Returns
--------
+### Returns
+
 
 returns `frames_features, frame_count, signal_length, trimmed_length`
 
@@ -65,22 +72,27 @@ Indices | Description
 
 ## Bulk processing
 
->Pass a list of DB files objects (see library: tabahi/SER_Datasets_Import) and path of HDF file to save extracted features:
+Pass a list of DB files objects (see library: tabahi/SER_Datasets_Import) and path of HDF file to save extracted features:
+
+
+`Extract_files_formant_features`
+--------------------------------
 
 ```python
-FormantsLib.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
+import FormantsLib.FormantsExtract as FormantsExtract
+
+FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
 ```
 
-Parameters
-----------
+### Parameters
+
 
 `array_of_clips`: list of `Clip_file_Class` objects from 'SER_DB.py';
 
 `features_save_file`: string, Path for HDF file where extracted features will be stored;
 
 
-Returns
--------
+### Returns
 
 
 `processed_clips`: int, number of successfully processing clips;
@@ -88,14 +100,18 @@ Returns
 
 ## Other functions
 
->HDF read functions:
+HDF read functions: `import_features_from_HDF` import from `FormantsHDPread`
 
 ```python
 import FormantsLib.FormantsHDPread as FormantsHDPread
 
-formant_features, labels, unique_speaker_ids, unique_classes = FormantsHDPread.import_features_from_HDF(storage_file, window_len, window_step, deselect_labels=['B'])
+formant_features, labels, unique_speaker_ids, unique_classes = FormantsHDPread.import_features_from_HDF(storage_file, deselect_labels=['B', 'X'])
+# Import without deslected labels B (Boring) and X (unknown)
+```
 
+Print features stats and save to file:
 
+```python
 FormantsHDPread.print_database_stats(labels)
 
 FormantsHDPread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)

@@ -105,7 +105,7 @@ def save_features_stats(db_name, csv_filename, labels, features):
 
 
 
-def import_features_from_HDF(storage_file, window_len, window_step, deselect_labels=None):
+def import_features_from_HDF(storage_file, deselect_labels=None):
     # deselect_labels=['C', 'D', 'F', 'U'])
     print("Reading dataset from file:", storage_file)
     import h5py
@@ -135,7 +135,7 @@ def import_features_from_HDF(storage_file, window_len, window_step, deselect_lab
 
 
 
-def import_mutiple_HDFs(storage_files, window_len, window_step, deselect_labels=['C', 'D', 'F', 'U', 'E', 'R', 'G', 'B']):
+def import_mutiple_HDFs(storage_files, deselect_labels=['C', 'D', 'F', 'U', 'E', 'R', 'G', 'B']):
     # deselect_labels=['C', 'D', 'F', 'U', 'E', 'R', 'G', 'B']
     import os.path as os_path
     import h5py
