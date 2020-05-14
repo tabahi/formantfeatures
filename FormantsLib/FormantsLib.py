@@ -2,6 +2,35 @@ import numpy as np
 from scipy import signal as signallib
 from numba import jit
 
+"""
+-----
+Author: Abdul Rehman
+License:  The MIT License (MIT)
+Copyright (c) 2020, Tabahi Abdul Rehman
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+"""
 
     
 def frame_segmentation(signal, sample_rate, window_length=0.040, window_step=0.020):
@@ -32,7 +61,18 @@ def frame_segmentation(signal, sample_rate, window_length=0.040, window_step=0.0
 
 def get_filter_banks(frames, sample_rate, f0_min=60, f0_max=4000, num_filt=128):
     
-    #Fourier-Transform and Power Spectrum
+    '''
+    Fourier-Transform and Power Spectrum
+
+    return filter_banks, hz_points
+
+    filter_banks: array-like, shape = [n_frames, num_filt]
+
+    hz_points: array-like, shape = [num_filt], center frequency of mel-filters
+
+    This code is from https://haythamfayek.com/2016/04/21/speech-processing-for-machine-learning.html
+    Courtesy of Haytham Fayek
+    '''
 
     NFFT = num_filt*32      #FFT bins (equally spaced - Unlike mel filter)
     mag_frames = np.absolute(np.fft.rfft(frames, NFFT))  # Magnitude of the FFT
@@ -260,7 +300,7 @@ def Extract_formant_descriptors(fft_x, fft_y, formants=2, f_min=30, f_max=4000):
 
 
 
-def Extract_formant_features(test_file_path, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, f0_min=30, f0_max=4000, max_frames=200, formants=2, formant_decay=0.5):
+def Extract_wav_file_formants(test_file_path, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, f0_min=30, f0_max=4000, max_frames=200, formants=2, formant_decay=0.5):
 
     from wavio import read as wavio_read
     wav_data = wavio_read(test_file_path)
