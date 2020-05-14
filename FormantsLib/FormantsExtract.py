@@ -420,6 +420,7 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
             formants_data[fr, width + (i*num_of_features)] = formants_data[fr, width + (i*num_of_features)] * 5 * formant_decay_rate
             formants_data[fr, dissonance + (i*num_of_features)] = formants_data[fr, dissonance + (i*num_of_features)] * 10 * formant_decay_rate
         #print(formants_data[fr])
+        #exit()
     returno = np.zeros((max_frames, num_of_features*formants), dtype=np.uint16)
     frame_count = 0
     for i in range(0, max_frames):
@@ -501,84 +502,3 @@ def Extract_files_formant_features(array_of_clips, features_save_file, window_le
     return processed_clips
 
 
-
-
-def select_features(train_features, Y_labels_train, K_SD=-0.5, mode=0):
-    features_n = train_features.shape[1]
-    label_classes = np.unique(Y_labels_train)
-
-    if (mode==1):
-        #select same number of features optimized for each emotion.
-        select_n = int(features_n*np.abs(1-K_SD)/len(label_classes))
-        selected_indices = np.zeros((select_n*len(label_classes), ), dtype=np.uint16)
-
-        for e in range(0, len(label_classes)):
-            select_emo = np.where(Y_labels_train==label_classes[e])
-
-            features_std_within_emo= np.std(train_features[select_emo], axis=0)
-            selected_indices[select_n*e:select_n*(e+1)] = get_top_positions(features_std_within_emo, select_n)
-        return selected_indices
-    
-    elif (mode==2):
-
-        selected_indices = np.zeros(([]), dtype=np.uint16)
-
-        from sklearn.model_selection import ShuffleSplit
-        splits_n = 4
-        rs = ShuffleSplit(n_splits=splits_n, test_size=None, random_state=0)
-        
-        feature_means = np.zeros((len(label_classes), splits_n, features_n,), dtype=np.float)
-        feature_means_per_emo = np.zeros((len(label_classes), features_n,), dtype=np.float)
-        feature_std_per_emo = np.zeros((len(label_classes), features_n,), dtype=np.float)
-        #parts_emo_mean_std = np.zeros((splits_n, features_n,), dtype=np.float)
-        tsp = 0
-        for big_part, s_part in rs.split(train_features):
-            for e in range(0, len(label_classes)):
-                # select part --> select emotion --> features mean
-                train_features_part = train_features[s_part]
-                Y_labels_train_part = Y_labels_train[s_part]
-                select_emo = np.where(Y_labels_train_part==label_classes[e])
-                feature_means[e, tsp, :] = np.mean(train_features_part[select_emo], axis=0)
-            # part --> features std across emotions
-            tsp += 1
-        
-        for e in range(0, len(label_classes)):
-            feature_means_per_emo[e] = np.mean(feature_means[e], axis=0)
-            feature_std_per_emo[e] = np.std(feature_means[e], axis=0)
-        
-        for e in range(0, len(label_classes)):
-
-            features_mean_values = np.mean(feature_means_per_emo, axis=0)
-            emo_mean_diff = np.abs(features_mean_values - feature_means_per_emo[e])
-
-            K = K_SD
-            thresh_mean = np.mean(emo_mean_diff) + (np.std(feature_std_per_emo[e])*(K))
-            thresh_std = np.mean(feature_std_per_emo[e]) + (np.std(feature_std_per_emo[e])*(1 - K))
-
-            conditions = (emo_mean_diff > thresh_mean) & (feature_std_per_emo[e] < thresh_std)
-
-            #selected_indices = np.where(conditions)[0]
-            selected_indices = np.append(selected_indices, np.where(conditions)[0])
-            #print(np.where(conditions)[0].size)
-
-        return np.unique(selected_indices)
-
-    else:
-        #select features with high SD across emotions
-        feature_means = np.zeros((len(label_classes), features_n, ), dtype=np.float)
-        #features_std = np.zeros((len(label_classes), features_n, ), dtype=np.float)
-        for e in range(0, len(label_classes)):
-            select_emo = np.where(Y_labels_train==label_classes[e])
-            feature_means[e, :] = np.mean(train_features[select_emo], axis=0)
-            #features_std[e, :] = np.std(train_features[select_emo], axis=0)
-
-        emo_mean_std = np.std(feature_means, axis=0)
-        
-        #selected_indices = get_top_positions(emo_std_mean, selected_features_n)
-        thresh = np.mean(emo_mean_std) + (np.std(emo_mean_std) * K_SD)
-        selected_indices = np.where(emo_mean_std > thresh)[0]
-    
-        if (len(selected_indices) < 1):
-            return range(0,features_n)
-            
-        return selected_indices      
