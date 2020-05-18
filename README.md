@@ -11,7 +11,7 @@ Extract frequency, power, width and dissonance of formants from a WAV file. Thes
 + [Numba (v0.45.1)](https://numba.pydata.org/numba-doc/dev/user/installing.html)
 + [Wavio v0.0.4](https://pypi.org/project/wavio/)
 
-> Install all: `pip install numpy scipy h5py numba wavio scikit-learn`
+> Install all: `pip install numpy scipy h5py numba wavio`
 
 
 ---------
