@@ -18,7 +18,7 @@ def main():
     max_frames = 500
     max_formants = 3
 
-    formants_features, frame_count, signal_length, trimmed_length = FormantsExtract.Extract_wav_file_formants(test_wav, window_length, window_step, emphasize_ratio, f0_min, f0_max, max_frames, max_formants)
+    formants_features, frame_count, signal_length, trimmed_length = FormantsExtract.Extract_wav_file_formants(test_wav, window_length, window_step, emphasize_ratio, norm=0, f0_min=f0_min, f0_max=f0_max, max_frames=max_frames, formants=max_formants)
     
     for formant in range(max_formants):
         print("Formant", formant, "Mean freq:", np.mean(formants_features[(formant*4)+0,:]))
@@ -35,7 +35,7 @@ def main():
 
     #Pass a list of augmented DB objects (see SER_Datasets_Import) and path of HDF file to save extracted features:
 
-    FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
+    FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, norm=0, f0_min=30, f0_max=4000, max_frames=400, formants=3,)
 
     import FormantsLib.FormatsHDFread as FormatsHDFread
 

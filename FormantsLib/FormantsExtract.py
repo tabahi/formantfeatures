@@ -78,9 +78,8 @@ def get_top_positions(array_y, n_positions):
             i -= 1
 
     return top_indexes
-
-
     
+
 def frame_segmentation(signal, sample_rate, window_length=0.040, window_step=0.020):
 
     #Framing
@@ -107,7 +106,7 @@ def frame_segmentation(signal, sample_rate, window_length=0.040, window_step=0.0
     return frames, signal_length
 
 
-def get_filter_banks(frames, sample_rate, f0_min=60, f0_max=4000, num_filt=128):
+def get_filter_banks(frames, sample_rate, f0_min=60, f0_max=4000, num_filt=128, norm=0):
     '''
     Fourier-Transform and Power Spectrum
 
@@ -148,7 +147,8 @@ def get_filter_banks(frames, sample_rate, f0_min=60, f0_max=4000, num_filt=128):
     filter_banks = np.dot(pow_frames, fbank.T)
     filter_banks = np.where(filter_banks == 0, np.finfo(float).eps, filter_banks)  # Numerical Stability
     #filter_banks = 20 * np.log10(filter_banks)  # dB
-    #filter_banks -= (np.mean(filter_banks)) #normalize
+    if(norm):
+        filter_banks -= (np.mean(filter_banks)) #normalize
 
     return filter_banks, hz_points
 
@@ -300,7 +300,7 @@ def Extract_formant_descriptors(fft_x, fft_y, formants=2, f_min=30, f_max=4000):
 
 
 
-def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, f0_min=30, f0_max=4000, max_frames=400, formants=3, formant_decay=0.5):
+def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, norm=0, f0_min=30, f0_max=4000, max_frames=400, formants=3, formant_decay=0.5):
     '''
     Parameters
     ----------
@@ -312,6 +312,8 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
     `window_step`: float, optional (default=0.010). Frame window step size in seconds;
 
     `emphasize_ratio`: float, optional (default=0.7). Amplitude increasing factor for pre-emphasis of higher frequencies (high frequencies * emphasize_ratio = balanced amplitude as low frequencies);
+
+    `norm`: int, optional, (default=0), Enable or disable normalization of Mel-filters;
 
     `f0_min`: int, optional, (default=30), Hertz;
 
@@ -336,6 +338,7 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
     `trimmed_length`: float, trimmed length in seconds, silence at the begining and end of the input signal is trimmed before processing;
     '''
 
+    
     from wavio import read as wavio_read
     wav_data = wavio_read(wav_file_path)
     raw_signal = wav_data.data
@@ -347,7 +350,7 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
     
     num_filt = 256
     frames, signal_length = frame_segmentation(signal_to_plot, sample_rate, window_length=window_length, window_step=window_step)
-    frames_filter_banks, hz_points = get_filter_banks(frames, sample_rate, f0_min=f0_min, f0_max=f0_max, num_filt=num_filt)
+    frames_filter_banks, hz_points = get_filter_banks(frames, sample_rate, f0_min=f0_min, f0_max=f0_max, num_filt=num_filt, norm=norm)
     
     #x-axis points for triangular mel filter used
     #hz_bins_min = hz_points[0:num_filt] #discarding last 2 points
@@ -439,7 +442,7 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
 
 
 
-def Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,):
+def Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, norm=0, f0_min=30, f0_max=4000, max_frames=400, formants=3,):
     '''
     Parameters
     ----------
@@ -452,6 +455,8 @@ def Extract_files_formant_features(array_of_clips, features_save_file, window_le
     `window_step`: float, optional (default=0.010). Frame window step size in seconds;
 
     `emphasize_ratio`: float, optional (default=0.7). Amplitude increasing factor for pre-emphasis of higher frequencies (high frequencies * emphasize_ratio = balanced amplitude as low frequencies);
+
+    `norm`: int, optional, (default=0), Enable or disable normalization of Mel-filters;
 
     `f0_min`: int, optional, (default=30), Hertz;
 
@@ -487,7 +492,7 @@ def Extract_files_formant_features(array_of_clips, features_save_file, window_le
                 print("Clip ", index+1, "of", total_clips, clip.speaker_id, clip.accent, clip.sex, clip.emotion)
                 array_frames_by_features = np.zeros((max_frames, formants*4), dtype=np.uint16)
                 #print(clip.filepath)
-                array_frames_by_features, frame_count, signal_length, trimmed_length = Extract_wav_file_formants(clip.filepath, window_length, window_step, emphasize_ratio, f0_min, f0_max, max_frames, formants)
+                array_frames_by_features, frame_count, signal_length, trimmed_length = Extract_wav_file_formants(clip.filepath, window_length, window_step, emphasize_ratio, norm, f0_min, f0_max, max_frames, formants)
                 clipfile_size = int(os.path.getsize(clip.filepath)/1000)
 
                 dset_features[index] = array_frames_by_features
@@ -500,5 +505,6 @@ def Extract_files_formant_features(array_of_clips, features_save_file, window_le
     
     print("Closing HDF")
     return processed_clips
+
 
 

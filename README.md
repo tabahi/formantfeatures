@@ -2,6 +2,19 @@
 
 Extract frequency, power, width and dissonance of formants from a WAV file. These formant features can be used for speech recognition or music analysis.
 
+## Dependencies
+
++ Python 3.7 or later
++ Numpy 1.16 or later
++ [Scipy v1.3.1](https://scipy.org/install.html)
++ [H5py v2.9.0](https://pypi.org/project/h5py/)
++ [Numba (v0.45.1)](https://numba.pydata.org/numba-doc/dev/user/installing.html)
++ [Wavio v0.0.4](https://pypi.org/project/wavio/)
+
+> Install all: `pip install numpy scipy h5py numba wavio scikit-learn`
+
+
+---------
 
 ## Get formant characteristics from a single file
 
@@ -25,6 +38,8 @@ FormantsExtract.Extract_wav_file_formants((string)test_wav, (float)window_length
 
 >`emphasize_ratio`: float, optional (default=0.7). Amplitude increasing factor for pre-emphasis of higher frequencies (high frequencies * emphasize_ratio = balanced amplitude as low frequencies).
 
+`norm`: int, optional, (default=0), Enable or disable normalization of Mel-filters;
+
 >`f0_min`: int, optional, (default=30), Hertz.
 
 >`f0_max`: int, optional, (default=4000), Hertz.
@@ -41,7 +56,7 @@ FormantsExtract.Extract_wav_file_formants((string)test_wav, (float)window_length
 returns `frames_features, frame_count, signal_length, trimmed_length`
 
 >`frames_features`: array-like, `np.array((max_frames, num_of_features*formants), dtype=np.uint16)`. If `formant=3` then `formants_features` is a numpy array of shape=(12xframes) comprising of 12 features for each 0.025s frame of the WAV file. Frame size can be adjusted, recommended size is 0.025s. 
-The 12 features are frequency, power, width and dissonance of top 3 formants are at indices such as:
+The 12 features are frequency, power, width and dissonance of top 3 formants are at indices of numpy array as:
 
 
 Indices | Description
@@ -117,21 +132,3 @@ FormatsHDFread.print_database_stats(labels)
 FormatsHDFread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
 ```
 
-## Dependencies
-
-### Scipy
-
-Signal processing (:mod:`scipy.signal`)
-<https://www.scipy.org/>
-
-### Numba
-
-<http://numba.pydata.org/numba-doc/latest/reference/>
-
-### Wavio
-
-<https://pypi.org/project/wavio/>
-Author: Warren Weckesser
-License: BSD 2-Clause:
-Copyright (c) 2015, Warren Weckesser
-All rights reserved.
