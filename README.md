@@ -11,7 +11,7 @@ Extract frequency, power, width and dissonance of formants from a WAV file. Thes
 + [Numba (v0.45.1)](https://numba.pydata.org/numba-doc/dev/user/installing.html)
 + [Wavio v0.0.4](https://pypi.org/project/wavio/)
 
-> Install all: `pip install numpy scipy h5py numba wavio`
+> Install : `pip install formantfeatures`
 
 
 ---------
@@ -22,9 +22,9 @@ Extract frequency, power, width and dissonance of formants from a WAV file. Thes
 --------------------------------
 
 ```python
-import FormantsLib.FormantsExtract as FormantsExtract
+import formantfeatures as ff
 
-FormantsExtract.Extract_wav_file_formants(test_wav, window_length=0.025, window_step=0.010, emphasize_ratio=0.7, f0_min=30, f0_max=4000, max_frames=400, max_formants=0.5)
+formants_features, frame_count, signal_length, trimmed_length = ff.Extract_wav_file_formants(wav_file_path, window_length, window_step, emphasize_ratio, norm=0, f0_min=f0_min, f0_max=f0_max, max_frames=max_frames, formants=max_formants)
 ```
 
 ### Parameters
@@ -87,11 +87,9 @@ Indices | Description
 An example code is given in file `example.py`.
 This example extracts 12 formant features for each frame of test wav file ('test_1.wav' has 383 frames of 25ms window at 10ms stride). On line 27 we have:
 
-```python
-formants_features, frame_count, signal_length, trimmed_length = FormantsExtract.Extract_wav_file_formants(test_wav, window_length, window_step, emphasize_ratio, norm=0, f0_min=f0_min, f0_max=f0_max, max_frames=max_frames, formants=max_formants)
-```
 
-The `formants_features` array of size (500, 12) is returned by the function `FormantsExtract.Extract_wav_file_formants` in which 500 is the maximum number of frames but only `frame_count` number of frames are used.
+
+The `formants_features` array of size (500, 12) is returned by the function `formantfeatures.Extract_wav_file_formants` in which 500 is the maximum number of frames but only `frame_count` number of frames are used.
 
 Then we calculate mean of frequency, power, width and dissonance of first 3 formant across 383 frames.
 
@@ -142,9 +140,9 @@ Pass a list of DB files objects (see <https://github.com/tabahi/SER_Datasets_Imp
 --------------------------------
 
 ```python
-import FormantsLib.FormantsExtract as FormantsExtract
+import formantfeatures as ff
 
-FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
+ff.Extract_files_formant_features(array_of_clips, features_save_file, window_length=0.025, window_step=0.010, emphasize_ratio=0.7,  f0_min=30, f0_max=4000, max_frames=400, formants=3,)
 ```
 
 ### Parameters
@@ -166,17 +164,17 @@ FormantsExtract.Extract_files_formant_features(array_of_clips, features_save_fil
 HDF read functions: `import_features_from_HDF` import from `FormatsHDFread`
 
 ```python
-import FormantsLib.FormatsHDFread as FormatsHDFread
+import formantfeatures as ff
 
-formant_features, labels, unique_speaker_ids, unique_classes = FormatsHDFread.import_features_from_HDF(storage_file, deselect_labels=['B', 'X'])
+formant_features, labels, unique_speaker_ids, unique_classes = ff.import_features_from_HDF(storage_file, deselect_labels=['B', 'X'])
 # Import without deslected labels B (Boring) and X (unknown)
 ```
 
 Print label stats and save features stats to file:
 
 ```python
-FormatsHDFread.print_database_stats(labels)
+ff.print_database_stats(labels)
 
-FormatsHDFread.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
+ff.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
 ```
 

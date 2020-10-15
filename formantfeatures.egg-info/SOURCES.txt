@@ -1,0 +1,10 @@
+README.md
+setup.py
+formantfeatures/FormantsExtract.py
+formantfeatures/FormatsHDFread.py
+formantfeatures/__init__.py
+formantfeatures.egg-info/PKG-INFO
+formantfeatures.egg-info/SOURCES.txt
+formantfeatures.egg-info/dependency_links.txt
+formantfeatures.egg-info/requires.txt
+formantfeatures.egg-info/top_level.txt

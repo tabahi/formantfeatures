@@ -28,8 +28,8 @@ Done
 '''
 
 import numpy as np
-import FormantsLib.FormantsExtract as FormantsExtract
-
+import formantfeatures as ff
+import matplotlib.pyplot as plt
 
 
 def main():
@@ -45,7 +45,7 @@ def main():
     max_frames = 500
     max_formants = 3
 
-    formants_features, frame_count, signal_length, trimmed_length = FormantsExtract.Extract_wav_file_formants(test_wav, window_length, window_step, emphasize_ratio, norm=0, f0_min=f0_min, f0_max=f0_max, max_frames=max_frames, formants=max_formants)
+    formants_features, frame_count, signal_length, trimmed_length = ff.Extract_wav_file_formants(test_wav, window_length, window_step, emphasize_ratio, norm=0, f0_min=f0_min, f0_max=f0_max, max_frames=max_frames, formants=max_formants)
     
     print("formants_features max_frames:", formants_features.shape[0], " features count:", formants_features.shape[1], "frame_count", frame_count)
     
@@ -56,8 +56,39 @@ def main():
         print("Formant", formant, "Mean dissonance:", np.mean(formants_features[0:frame_count, (formant*4)+3]))
     
     
+    x_axis_i = [*range(0, frame_count, 1)]
+
+    colors = ['b', 'r', 'g']
+    
+    for formant in range(0, 1):
+        formant_decay_rate = 0.5**(formant)
+
+        log_scaled_freq = formants_features[0:frame_count, formant*4]
+
+        Hz_freq = np.exp(log_scaled_freq / (200*formant_decay_rate))
+
+        Hz_width  = np.exp(np.log(Hz_freq) - formants_features[0:frame_count, (formant*4)+2] / (50 * formant_decay_rate))/4
+        
+        width_dn = Hz_freq - Hz_width
+        width_up = Hz_freq + Hz_width
+    
+        plt.plot(x_axis_i, Hz_freq)
+        plt.fill_between(x_axis_i, Hz_freq, width_dn, color=colors[formant], alpha=0.30)
+        plt.fill_between(x_axis_i, Hz_freq, width_up, color=colors[formant], alpha=0.30)
+
+    
+    plt.tight_layout()
+    plt.xlabel("frame")
+    plt.ylabel("f")
+    plt.title("freq")
+    
+
+    plt.show()
+
     print("Done")
     exit()
+
+
 
     '''
     Other functions:

@@ -2,3 +2,7 @@ Archive/
 cache/
 __pycache__/
 .vscode
+build/
+dist/
+*.code-workspace
+.pypirc

@@ -1,0 +1,19 @@
+Metadata-Version: 1.2
+Name: formantfeatures
+Version: 1.0.3
+Summary: Extract formant characteristics from speech wav files.
+Home-page: https://github.com/tabahi/formantfeatures
+Author: Abdul Rehman
+Author-email: alabdulrehman@hotmail.fr
+License: MIT
+Description: Please go to: https://github.com/tabahi/formantfeatures
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Topic :: Software Development :: Libraries
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Intended Audience :: Developers
+Requires-Python: >=3.7

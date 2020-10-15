@@ -30,6 +30,7 @@ POSSIBILITY OF SUCH DAMAGE.
 import numpy as np
 from scipy import signal as signallib
 from numba import jit #install numba to speed up the execution
+from wavio import read as wavio_read
 
 
 @jit(nopython=True) 
@@ -339,7 +340,6 @@ def Extract_wav_file_formants(wav_file_path, window_length=0.025, window_step=0.
     '''
 
     
-    from wavio import read as wavio_read
     wav_data = wavio_read(wav_file_path)
     raw_signal = wav_data.data
     sample_rate = wav_data.rate
