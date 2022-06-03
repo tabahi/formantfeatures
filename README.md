@@ -178,3 +178,28 @@ ff.print_database_stats(labels)
 ff.save_features_stats("DB_X", "csv_filename.csv", labels, formant_features)
 ```
 
+
+
+------------------
+
+## Citations
+
+```tex
+@article{LIU2021309,
+title = {Speech emotion recognition based on formant characteristics feature extraction and phoneme type convergence},
+journal = {Information Sciences},
+volume = {563},
+pages = {309-325},
+year = {2021},
+issn = {0020-0255},
+doi = {https://doi.org/10.1016/j.ins.2021.02.016},
+url = {https://www.sciencedirect.com/science/article/pii/S0020025521001584},
+author = {Zhen-Tao Liu and Abdul Rehman and Min Wu and Wei-Hua Cao and Man Hao},
+keywords = {Speech, Emotion recognition, Formants extraction, Phonemes, Clustering, Cross-corpus},
+abstract = {Speech Emotion Recognition (SER) has numerous applications including human-robot interaction, online gaming, and health care assistance. While deep learning-based approaches achieve considerable precision, they often come with high computational and time costs. Indeed, feature learning strategies must search for important features in a large amount of speech data. In order to reduce these time and computational costs, we propose pre-processing step in which speech segments with similar formant characteristics are clustered together and labeled as the same phoneme. The phoneme occurrence rates in emotional utterances are then used as the input features for classifiers. Using six databases (EmoDB, RAVDESS, IEMOCAP, ShEMO, DEMoS and MSP-Improv) for evaluation, the level of accuracy is comparable to that of current state-of-the-art methods and the required training time was significantly reduced from hours to minutes.}
+}
+```
+
+Paper: [Speech emotion recognition based on formant characteristics feature extraction and phoneme type convergence](https://www.sciencedirect.com/science/article/abs/pii/S0020025521001584)
+
+
